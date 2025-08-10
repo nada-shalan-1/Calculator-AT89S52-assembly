@@ -1,0 +1,649 @@
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 1
+
+
+
+
+
+       MCS-51 Family Macro Assembler   A S E M - 5 1   V 1.3
+       =====================================================
+
+
+
+	Source File:	D:\sem 7\calc_micro\cal_assembly.asm
+	Object File:	D:\sem 7\calc_micro\cal_assembly.hex
+	List File:	D:\sem 7\calc_micro\cal_assembly.lst
+
+
+
+ Line  I  Addr  Code            Source
+
+    1:		N      0000		ORG 00H
+    2:
+    3:		B      00A7		NEW_NUM_FLAG EQU P2.7
+    4:		B      00A6		FIRST_DIG_FLAG EQU P2.6
+    5:		B      00A1		RS EQU P2.1
+    6:		B      00A2		E EQU P2.2
+    7:
+    8:
+    9:
+   10:	  0000	78 38			MOV R0, #38H
+   11:	  0002	31 4C			ACALL COMMAND
+   12:	  0004	78 0E			MOV R0, #0EH
+   13:	  0006	31 4C			ACALL COMMAND
+   14:	  0008	78 80			MOV R0, #80H
+   15:	  000A	31 4C			ACALL COMMAND
+   16:	  000C	78 01			MOV R0, #01H
+   17:	  000E	31 4C			ACALL COMMAND
+   18:
+   19:	  0010	7C 00			MOV R4, #00H
+   20:	  0012	75 A0 00		MOV P2, #00H
+   21:	  0015	75 B0 FE		MOV P3, #0FEH
+   22:	  0018	7B 00			MOV R3, #00H
+   23:	  001A	79 00			MOV R1, #00H
+   24:	  001C	7A 2B			MOV R2, #'+'
+   25:	  001E			L1:
+   26:	  001E	30 B0 0B		JNB P3.0, C1
+   27:	  0021	30 B1 1A		JNB P3.1, C2
+   28:	  0024	30 B2 29		JNB P3.2, C3
+   29:	  0027	30 B3 38		JNB P3.3, C4
+   30:	  002A	80 F2			SJMP L1
+   31:
+   32:	  002C	30 B4 46	C1:	JNB P3.4, JBOT_ON
+   33:	  002F	30 B5 46		JNB P3.5, JBOT_ZERO
+   34:	  0032	30 B6 6D		JNB P3.6, JBOT_EQUAL
+   35:	  0035	30 B7 5E		JNB P3.7, JBOT_PLUS
+   36:	  0038	D2 B0			SETB P3.0
+   37:	  003A	C2 B1			CLR P3.1
+   38:	  003C	80 E0			SJMP L1
+   39:
+   40:
+   41:	  003E	30 B4 3A	C2:	JNB P3.4, JBOT_1
+   42:	  0041	30 B5 3A		JNB P3.5, JBOT_2
+   43:	  0044	30 B6 3A		JNB P3.6, JBOT_3
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 2
+
+
+
+ Line  I  Addr  Code            Source
+
+   44:	  0047	30 B7 4F		JNB P3.7, JBOT_MINUS
+   45:	  004A	D2 B1			SETB P3.1
+   46:	  004C	C2 B2			CLR P3.2
+   47:	  004E	80 CE			SJMP L1
+   48:
+   49:	  0050	30 B4 31	C3:	JNB P3.4, JBOT_4
+   50:	  0053	30 B5 31		JNB P3.5, JBOT_5
+   51:	  0056	30 B6 31		JNB P3.6, JBOT_6
+   52:	  0059	30 B7 40		JNB P3.7, JBOT_MUL
+   53:	  005C	D2 B2			SETB P3.2
+   54:	  005E	C2 B3			CLR P3.3
+   55:	  0060	80 BC			SJMP L1
+   56:
+   57:	  0062	30 B4 28	C4:	JNB P3.4, JBOT_7
+   58:	  0065	30 B5 28		JNB P3.5, JBOT_8
+   59:	  0068	30 B6 28		JNB P3.6, JBOT_9
+   60:	  006B	30 B7 31		JNB P3.7, JBOT_DIV
+   61:	  006E	D2 B3			SETB P3.3
+   62:	  0070	C2 B0			CLR P3.0
+   63:	  0072	02 00 1E		LJMP L1
+   64:
+   65:	  0075	02 00 A5	JBOT_ON: LJMP BOT_ON
+   66:	  0078	02 00 AA	JBOT_ZERO: LJMP BOT_ZERO
+   67:	  007B	02 00 CF	JBOT_1: LJMP BOT_1
+   68:	  007E	02 00 D8	JBOT_2: LJMP BOT_2
+   69:	  0081	02 00 E1	JBOT_3: LJMP BOT_3
+   70:	  0084	02 00 F3	JBOT_4: LJMP BOT_4
+   71:	  0087	02 00 FC	JBOT_5: LJMP BOT_5
+   72:	  008A	02 01 05	JBOT_6: LJMP BOT_6
+   73:	  008D	02 01 17	JBOT_7: LJMP BOT_7
+   74:	  0090	02 01 20	JBOT_8: LJMP BOT_8
+   75:	  0093	02 01 29	JBOT_9: LJMP BOT_9
+   76:	  0096	02 00 C6	JBOT_PLUS: LJMP BOT_PLUS
+   77:	  0099	02 00 EA	JBOT_MINUS: LJMP BOT_MINUS
+   78:	  009C	02 01 0E	JBOT_MUL: LJMP BOT_MUL
+   79:	  009F	02 01 32	JBOT_DIV: LJMP BOT_DIV
+   80:	  00A2	02 00 B3	JBOT_EQUAL: LJMP BOT_EQUAL
+   81:
+   82:	  00A5	D2 A0		BOT_ON: 	SETB P2.0
+   83:	  00A7	02 00 1E			LJMP L1
+   84:
+   85:	  00AA	78 30		BOT_ZERO: 	MOV R0, #'0'
+   86:	  00AC	31 5D				ACALL NUM
+   87:	  00AE	31 3B				ACALL DISPLAY
+   88:	  00B0	02 00 1E			LJMP L1
+   89:
+   90:	  00B3	78 3D		BOT_EQUAL: 	MOV R0, #'='
+   91:	  00B5	31 3B				ACALL DISPLAY
+   92:	  00B7	31 A5				ACALL RESULT
+   93:	  00B9	75 3E 64			N: MOV 62,#100D
+   94:	  00BC	51 6D		                LOOP2: ACALL DELAY
+   95:	  00BE	D5 3E FB	                DJNZ 62,LOOP2
+   96:	  00C1	D2 A0		                SETB P2.0
+   97:	  00C3	02 00 1E			LJMP L1
+   98:
+   99:	  00C6	78 2B		BOT_PLUS: 	MOV R0, #'+'
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 3
+
+
+
+ Line  I  Addr  Code            Source
+
+  100:	  00C8	31 9E				ACALL OPERATOR
+  101:	  00CA	31 3B				ACALL DISPLAY
+  102:	  00CC	02 00 1E			LJMP L1
+  103:
+  104:	  00CF	78 31		BOT_1: 		MOV R0, #'1'
+  105:	  00D1	31 5D				ACALL NUM
+  106:	  00D3	31 3B				ACALL DISPLAY
+  107:	  00D5	02 00 1E			LJMP L1
+  108:
+  109:	  00D8	78 32		BOT_2: 		MOV R0, #'2'
+  110:	  00DA	31 5D				ACALL NUM
+  111:	  00DC	31 3B				ACALL DISPLAY
+  112:	  00DE	02 00 1E			LJMP L1
+  113:
+  114:	  00E1	78 33		BOT_3: 		MOV R0, #'3'
+  115:	  00E3	31 5D				ACALL NUM
+  116:	  00E5	31 3B				ACALL DISPLAY
+  117:	  00E7	02 00 1E			LJMP L1
+  118:
+  119:	  00EA	78 2D		BOT_MINUS: 	MOV R0, #'-'
+  120:	  00EC	31 9E				ACALL OPERATOR
+  121:	  00EE	31 3B				ACALL DISPLAY
+  122:	  00F0	02 00 1E			LJMP L1
+  123:
+  124:	  00F3	78 34		BOT_4: 		MOV R0, #'4'
+  125:	  00F5	31 5D				ACALL NUM
+  126:	  00F7	31 3B				ACALL DISPLAY
+  127:	  00F9	02 00 1E			LJMP L1
+  128:
+  129:	  00FC	78 35		BOT_5: 		MOV R0, #'5'
+  130:	  00FE	31 5D				ACALL NUM
+  131:	  0100	31 3B				ACALL DISPLAY
+  132:	  0102	02 00 1E			LJMP L1
+  133:
+  134:	  0105	78 36		BOT_6: 		MOV R0, #'6'
+  135:	  0107	31 5D				ACALL NUM
+  136:	  0109	31 3B				ACALL DISPLAY
+  137:	  010B	02 00 1E			LJMP L1
+  138:
+  139:	  010E	78 2A		BOT_MUL: 	MOV R0, #'*'
+  140:	  0110	31 9E				ACALL OPERATOR
+  141:	  0112	31 3B				ACALL DISPLAY
+  142:	  0114	02 00 1E			LJMP L1
+  143:
+  144:	  0117	78 37		BOT_7: 		MOV R0, #'7'
+  145:	  0119	31 5D				ACALL NUM
+  146:	  011B	31 3B				ACALL DISPLAY
+  147:	  011D	02 00 1E			LJMP L1
+  148:
+  149:	  0120	78 38		BOT_8: 		MOV R0, #'8'
+  150:	  0122	31 5D				ACALL NUM
+  151:	  0124	31 3B				ACALL DISPLAY
+  152:	  0126	02 00 1E			LJMP L1
+  153:
+  154:	  0129	78 39		BOT_9: 		MOV R0, #'9'
+  155:	  012B	31 5D				ACALL NUM
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 4
+
+
+
+ Line  I  Addr  Code            Source
+
+  156:	  012D	31 3B				ACALL DISPLAY
+  157:	  012F	02 00 1E			LJMP L1
+  158:
+  159:	  0132	78 2F		BOT_DIV: 	MOV R0, #'/'
+  160:	  0134	31 9E				ACALL OPERATOR
+  161:	  0136	31 3B				ACALL DISPLAY
+  162:	  0138	02 00 1E			LJMP L1
+  163:
+  164:
+  165:	  013B			DISPLAY:
+  166:	  013B	88 90			MOV P1, R0
+  167:	  013D	D2 A1			SETB RS
+  168:	  013F	D2 A2			SETB E
+  169:	  0141	C2 A2			CLR E
+  170:	  0143	75 3E 07		M: MOV 62,#7D
+  171:	  0146	51 6D		        LOOP: ACALL DELAY
+  172:	  0148	D5 3E FB	        DJNZ 62,LOOP
+  173:
+  174:	  014B	22			RET
+  175:
+  176:	  014C			COMMAND:
+  177:	  014C	88 90			MOV P1, R0
+  178:	  014E	C2 A1			CLR RS
+  179:	  0150	D2 A2			SETB E
+  180:	  0152	C2 A2			CLR E
+  181:	  0154	75 3E 07		MA: MOV 62,#7D
+  182:	  0157	51 6D		        LOOP1: ACALL DELAY
+  183:	  0159	D5 3E FB	        DJNZ 62,LOOP1
+  184:	  015C	22			RET
+  185:
+  186:
+  187:	  015D			NUM:
+  188:	  015D	20 A7 1F		JB NEW_NUM_FLAG, SEC_NUM
+  189:	  0160	20 A6 07		JB FIRST_DIG_FLAG, FIRST_DIG
+  190:	  0163	E8			MOV A, R0
+  191:	  0164	94 30			SUBB A, #30H
+  192:	  0166	F9			MOV R1, A
+  193:	  0167	D2 A6			SETB FIRST_DIG_FLAG
+  194:	  0169	22			RET
+  195:
+  196:	  016A			FIRST_DIG:
+  197:	  016A	E8			MOV A, R0
+  198:	  016B	75 F0 0A		MOV B, #10D
+  199:	  016E	94 30			SUBB A, #30H
+  200:	  0170	FF			MOV R7, A
+  201:	  0171	E9			MOV A, R1
+  202:	  0172	A4			MUL AB
+  203:	  0173	AE F0			MOV R6, B
+  204:	  0175	BE 00 65		CJNE R6, #00H, J_OVER_FLOW
+  205:	  0178	2F			ADD A, R7
+  206:	  0179	40 62			JC J_OVER_FLOW
+  207:	  017B	F9			MOV R1, A
+  208:	  017C	D2 A6			SETB FIRST_DIG_FLAG
+  209:	  017E	22			RET
+  210:
+  211:	  017F			SEC_NUM:
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 5
+
+
+
+ Line  I  Addr  Code            Source
+
+  212:	  017F	20 A6 07		JB FIRST_DIG_FLAG, FIRST_DIG2
+  213:	  0182	E8			MOV A, R0
+  214:	  0183	94 30			SUBB A, #30H
+  215:	  0185	FB			MOV R3, A
+  216:	  0186	D2 A6			SETB FIRST_DIG_FLAG
+  217:	  0188	22			RET
+  218:
+  219:	  0189			FIRST_DIG2:
+  220:	  0189	E8			MOV A, R0
+  221:	  018A	75 F0 0A		MOV B, #10D
+  222:	  018D	94 30			SUBB A, #30H
+  223:	  018F	FF			MOV R7, A
+  224:	  0190	EB			MOV A, R3
+  225:	  0191	A4			MUL AB
+  226:	  0192	AE F0			MOV R6, B
+  227:	  0194	BE 00 46		CJNE R6, #00H, J_OVER_FLOW
+  228:	  0197	2F			ADD A, R7
+  229:	  0198	40 43			JC J_OVER_FLOW
+  230:	  019A	FB			MOV R3, A
+  231:	  019B	D2 A6			SETB FIRST_DIG_FLAG
+  232:	  019D	22			RET
+  233:
+  234:	  019E			OPERATOR:
+  235:	  019E	D2 A7			SETB NEW_NUM_FLAG
+  236:	  01A0	C2 A6			CLR FIRST_DIG_FLAG
+  237:	  01A2	E8			MOV A, R0
+  238:	  01A3	FA			MOV R2, A
+  239:	  01A4	22			RET
+  240:
+  241:
+  242:	  01A5			RESULT:
+  243:	  01A5	BA 2B 0B		CJNE R2, #'+', SUBTRACTION
+  244:	  01A8	E9			MOV A, R1
+  245:	  01A9	C3			CLR C
+  246:	  01AA	2B			ADD A, R3
+  247:	  01AB	40 30			JC J_OVER_FLOW
+  248:	  01AD	7D 00			MOV R5, #0H
+  249:	  01AF	FC			MOV R4, A
+  250:	  01B0	02 01 E0		LJMP PRINT
+  251:	  01B3			SUBTRACTION:
+  252:	  01B3	BA 2D 0B		CJNE R2, #'-', MULTIPLICATION
+  253:	  01B6	E9			MOV A, R1
+  254:	  01B7	C3			CLR C
+  255:	  01B8	9B			SUBB A, R3
+  256:	  01B9	40 22			JC J_OVER_FLOW
+  257:	  01BB	7D 00			MOV R5, #0H
+  258:	  01BD	FC			MOV R4, A
+  259:	  01BE	02 01 E0		LJMP PRINT
+  260:
+  261:	  01C1			MULTIPLICATION:
+  262:	  01C1	BA 2A 0F		CJNE R2, #'*', DIVISION
+  263:	  01C4	E9			MOV A, R1
+  264:	  01C5	8B F0			MOV B, R3
+  265:	  01C7	A4			MUL AB
+  266:	  01C8	AF F0			MOV R7, B
+  267:	  01CA	BF 00 79		CJNE R7, #0H, OVER_FLOW
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 6
+
+
+
+ Line  I  Addr  Code            Source
+
+  268:	  01CD	7D 00			MOV R5, #0H
+  269:	  01CF	FC			MOV R4, A
+  270:	  01D0	02 01 E0		LJMP PRINT
+  271:
+  272:	  01D3			DIVISION:
+  273:	  01D3	E9			MOV A, R1
+  274:	  01D4	8B F0			MOV B, R3
+  275:	  01D6	84			DIV AB
+  276:	  01D7	FC			MOV R4, A
+  277:	  01D8	AD F0			MOV R5, B
+  278:	  01DA	02 01 E0		LJMP PRINT
+  279:
+  280:	  01DD	02 02 46	J_OVER_FLOW: 	LJMP OVER_FLOW
+  281:
+  282:
+  283:	  01E0			PRINT:
+  284:	  01E0	BB 00 16		CJNE R3, #0D, NORMAL
+  285:	  01E3	BA 2F 13		CJNE R2, #'/', NORMAL
+  286:	  01E6	78 C0			MOV R0, #0C0H
+  287:	  01E8	31 4C			ACALL COMMAND
+  288:	  01EA	90 02 80		MOV DPTR, #MSGERRO
+  289:	  01ED	C3			CLR C
+  290:	  01EE	7F 00			MOV R7, #0D
+  291:	  01F0	EF		NEXT:	MOV A, R7
+  292:	  01F1	93			MOVC A, @A+DPTR
+  293:	  01F2	F8			MOV R0, A
+  294:	  01F3	31 3B			ACALL DISPLAY
+  295:	  01F5	0F			INC R7
+  296:	  01F6	70 F8			JNZ NEXT
+  297:	  01F8	22			RET
+  298:
+  299:	  01F9	7F 64		NORMAL:	MOV R7, #100D
+  300:	  01FB	C3			CLR C
+  301:	  01FC	9F			SUBB A, R7
+  302:	  01FD	40 22			JC LESS_THAN100
+  303:	  01FF	EC			MOV A, R4
+  304:	  0200	8F F0			MOV B, R7
+  305:	  0202	84			DIV AB
+  306:	  0203	24 30			ADD A, #30H
+  307:	  0205	F8			MOV R0, A
+  308:	  0206	31 3B			ACALL DISPLAY
+  309:	  0208	AC F0			MOV R4, B
+  310:	  020A	E5 F0			MOV A, B
+  311:	  020C	7F 0A			MOV R7, #10D
+  312:	  020E	8F F0			MOV B, R7
+  313:	  0210	84			DIV AB
+  314:	  0211	24 30			ADD A, #30H
+  315:	  0213	F8			MOV R0, A
+  316:	  0214	31 3B			ACALL DISPLAY
+  317:	  0216	E5 F0			MOV A, B
+  318:	  0218	24 30			ADD A, #30H
+  319:	  021A	F8			MOV R0, A
+  320:	  021B	31 3B			ACALL DISPLAY
+  321:	  021D	BD 00 3B		CJNE R5, #00H, DECIMAL
+  322:	  0220	22			RET
+  323:
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 7
+
+
+
+ Line  I  Addr  Code            Source
+
+  324:	  0221	7F 0A		LESS_THAN100: MOV R7, #10D
+  325:	  0223	C3			CLR C
+  326:	  0224	EC			MOV A, R4
+  327:	  0225	9F			SUBB A, R7
+  328:	  0226	40 14			JC LESS_THAN10
+  329:	  0228	EC			MOV A, R4
+  330:	  0229	8F F0			MOV B, R7
+  331:	  022B	84			DIV AB
+  332:	  022C	24 30			ADD A, #30H
+  333:	  022E	F8			MOV R0, A
+  334:	  022F	31 3B			ACALL DISPLAY
+  335:	  0231	E5 F0			MOV A, B
+  336:	  0233	24 30			ADD A, #30H
+  337:	  0235	F8			MOV R0, A
+  338:	  0236	31 3B			ACALL DISPLAY
+  339:	  0238	BD 00 20		CJNE R5, #00H, DECIMAL
+  340:	  023B	22			RET
+  341:
+  342:	  023C			LESS_THAN10:
+  343:	  023C	EC			MOV A, R4
+  344:	  023D	24 30			ADD A, #30H
+  345:	  023F	F8			MOV R0, A
+  346:	  0240	31 3B			ACALL DISPLAY
+  347:	  0242	BD 00 16		CJNE R5, #00H, DECIMAL
+  348:	  0245	22			RET
+  349:
+  350:
+  351:	  0246			OVER_FLOW:
+  352:	  0246	78 C0			MOV R0, #0C0H
+  353:	  0248	31 4C			ACALL COMMAND
+  354:	  024A	90 02 90		MOV DPTR, #MSGERRO2
+  355:	  024D	C3			CLR C
+  356:	  024E	7F 00			MOV R7, #0D
+  357:	  0250	EF		NEXT2:	MOV A, R7
+  358:	  0251	93			MOVC A, @A+DPTR
+  359:	  0252	F8			MOV R0, A
+  360:	  0253	31 3B			ACALL DISPLAY
+  361:	  0255	60 03			JZ FINAL
+  362:	  0257	0F			INC R7
+  363:	  0258	80 F6			SJMP NEXT2
+  364:	  025A			FINAL:
+  365:	  025A	22			RET
+  366:
+  367:
+  368:	  025B	78 2E		DECIMAL: MOV R0, #'.'
+  369:	  025D	31 3B			ACALL DISPLAY
+  370:	  025F	ED			MOV A, R5
+  371:	  0260	75 F0 0A		MOV B, #10D
+  372:	  0263	A4			MUL AB
+  373:	  0264	8B F0			MOV B, R3
+  374:	  0266	84			DIV AB
+  375:	  0267	24 30			ADD A, #30H
+  376:	  0269	F8			MOV R0, A
+  377:	  026A	31 3B			ACALL DISPLAY
+  378:	  026C	22			RET
+  379:
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 8
+
+
+
+ Line  I  Addr  Code            Source
+
+  380:	  026D	75 89 01	DELAY: MOV TMOD,#00000001B
+  381:	  0270	75 8C 3C	 MOV TH0,#03CH
+  382:	  0273	75 8A AF	 MOV TL0,#0AFH
+  383:	  0276	D2 8C		 SETB TR0
+  384:	  0278	30 8D FD	HERE: JNB TF0,HERE
+  385:	  027B	C2 8C		 CLR TR0
+  386:	  027D	C2 8D		 CLR TF0
+  387:	  027F	22		 RET
+  388:
+  389:
+  390:
+  391:
+  392:	  0280	45 52 52 4F	MSGERRO: DB 'ERROR: DIV BY 0',0
+	  0284	52 3A 20 44
+	  0288	49 56 20 42
+	  028C	59 20 30 00
+  393:	  0290	4F 56 45 52	MSGERRO2: DB 'OVERFLOW!',0
+	  0294	46 4C 4F 57
+	  0298	21 00
+  394:					END
+
+
+
+
+
+                     register banks used:  ---
+
+                     no errors
+
+
+
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 9
+
+
+
+
+
+	       L I S T   O F   S Y M B O L S
+	       =============================
+
+
+SYMBOL				  TYPE     VALUE	LINE
+------------------------------------------------------------
+??ASEM_51			  NUMBER    8051
+??VERSION			  NUMBER    0130
+AC				  BIT	      D6
+ACC				  DATA	      E0
+B				  DATA	      F0
+BOT_1				  CODE	    00CF	 104
+BOT_2				  CODE	    00D8	 109
+BOT_3				  CODE	    00E1	 114
+BOT_4				  CODE	    00F3	 124
+BOT_5				  CODE	    00FC	 129
+BOT_6				  CODE	    0105	 134
+BOT_7				  CODE	    0117	 144
+BOT_8				  CODE	    0120	 149
+BOT_9				  CODE	    0129	 154
+BOT_DIV				  CODE	    0132	 159
+BOT_EQUAL			  CODE	    00B3	  90
+BOT_MINUS			  CODE	    00EA	 119
+BOT_MUL				  CODE	    010E	 139
+BOT_ON				  CODE	    00A5	  82
+BOT_PLUS			  CODE	    00C6	  99
+BOT_ZERO			  CODE	    00AA	  85
+C1				  CODE	    002C	  32
+C2				  CODE	    003E	  41
+C3				  CODE	    0050	  49
+C4				  CODE	    0062	  57
+COMMAND				  CODE	    014C	 176
+CY				  BIT	      D7
+DECIMAL				  CODE	    025B	 368
+DELAY				  CODE	    026D	 380
+DISPLAY				  CODE	    013B	 165
+DIVISION			  CODE	    01D3	 272
+DPH				  DATA	      83
+DPL				  DATA	      82
+E				  NUMBER    00A2	   6
+EA				  BIT	      AF
+ES				  BIT	      AC
+ET0				  BIT	      A9
+ET1				  BIT	      AB
+EX0				  BIT	      A8
+EX1				  BIT	      AA
+EXTI0				  CODE	    0003
+EXTI1				  CODE	    0013
+F0				  BIT	      D5
+FINAL				  CODE	    025A	 364
+FIRST_DIG			  CODE	    016A	 196
+FIRST_DIG2			  CODE	    0189	 219
+FIRST_DIG_FLAG			  NUMBER    00A6	   4
+HERE				  CODE	    0278	 384
+IE				  DATA	      A8
+IE0				  BIT	      89
+
+ASEM-51 V1.3                                        Copyright (c) 2002 by W.W. Heinz                                         PAGE 10
+
+
+
+SYMBOL				  TYPE     VALUE	LINE
+------------------------------------------------------------
+IE1				  BIT	      8B
+INT0				  BIT	      B2
+INT1				  BIT	      B3
+IP				  DATA	      B8
+IT0				  BIT	      88
+IT1				  BIT	      8A
+JBOT_1				  CODE	    007B	  67
+JBOT_2				  CODE	    007E	  68
+JBOT_3				  CODE	    0081	  69
+JBOT_4				  CODE	    0084	  70
+JBOT_5				  CODE	    0087	  71
+JBOT_6				  CODE	    008A	  72
+JBOT_7				  CODE	    008D	  73
+JBOT_8				  CODE	    0090	  74
+JBOT_9				  CODE	    0093	  75
+JBOT_DIV			  CODE	    009F	  79
+JBOT_EQUAL			  CODE	    00A2	  80
+JBOT_MINUS			  CODE	    0099	  77
+JBOT_MUL			  CODE	    009C	  78
+JBOT_ON				  CODE	    0075	  65
+JBOT_PLUS			  CODE	    0096	  76
+JBOT_ZERO			  CODE	    0078	  66
+J_OVER_FLOW			  CODE	    01DD	 280
+L1				  CODE	    001E	  25
+LESS_THAN10			  CODE	    023C	 342
+LESS_THAN100			  CODE	    0221	 324
+LOOP				  CODE	    0146	 171
+LOOP1				  CODE	    0157	 182
+LOOP2				  CODE	    00BC	  94
+M				  CODE	    0143	 170
+MA				  CODE	    0154	 181
+MSGERRO				  CODE	    0280	 392
+MSGERRO2			  CODE	    0290	 393
+MULTIPLICATION			  CODE	    01C1	 261
+N				  CODE	    00B9	  93
+NEW_NUM_FLAG			  NUMBER    00A7	   3
+NEXT				  CODE	    01F0	 291
+NEXT2				  CODE	    0250	 357
+NORMAL				  CODE	    01F9	 299
+NUM				  CODE	    015D	 187
+OPERATOR			  CODE	    019E	 234
+OV				  BIT	      D2
+OVER_FLOW			  CODE	    0246	 351
+P				  BIT	      D0
+P0				  DATA	      80
+P1				  DATA	      90
+P2				  DATA	      A0
+P3				  DATA	      B0
+PCON				  DATA	      87
+PRINT				  CODE	    01E0	 283
+PS				  BIT	      BC
+PSW				  DATA	      D0
+PT0				  BIT	      B9
+PT1				  BIT	      BB
+PX0				  BIT	      B8
+PX1				  BIT	      BA
+
+ASEM-51 V1.3                                        Copyright (c) 2002 by W.W. Heinz                                         PAGE 11
+
+
+
+SYMBOL				  TYPE     VALUE	LINE
+------------------------------------------------------------
+RB8				  BIT	      9A
+RD				  BIT	      B7
+REN				  BIT	      9C
+RESET				  CODE	    0000
+RESULT				  CODE	    01A5	 242
+RI				  BIT	      98
+RS				  NUMBER    00A1	   5
+RS0				  BIT	      D3
+RS1				  BIT	      D4
+RXD				  BIT	      B0
+SBUF				  DATA	      99
+SCON				  DATA	      98
+SEC_NUM				  CODE	    017F	 211
+SINT				  CODE	    0023
+SM0				  BIT	      9F
+SM1				  BIT	      9E
+SM2				  BIT	      9D
+SP				  DATA	      81
+SUBTRACTION			  CODE	    01B3	 251
+T0				  BIT	      B4
+T1				  BIT	      B5
+TB8				  BIT	      9B
+TCON				  DATA	      88
+TF0				  BIT	      8D
+TF1				  BIT	      8F
+TH0				  DATA	      8C
+TH1				  DATA	      8D
+TI				  BIT	      99
+TIMER0				  CODE	    000B
+TIMER1				  CODE	    001B
+TL0				  DATA	      8A
+TL1				  DATA	      8B
+TMOD				  DATA	      89
+TR0				  BIT	      8C
+TR1				  BIT	      8E
+TXD				  BIT	      B1
+WR				  BIT	      B6
